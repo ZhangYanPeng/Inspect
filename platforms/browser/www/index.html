@@ -10,7 +10,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
             -->
-            <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+             <meta http-equiv="Content-Security-Policy" content="default-src * 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src * 'self' 'unsafe-inline'; media-src *">
 
             <!-- Required meta tags-->
             <meta charset="utf-8">
@@ -21,7 +21,7 @@
             <meta name="msapplication-tap-highlight" content="no">
 
             <!-- Your app title -->
-            <title>My App</title>
+            <title>支吊架掌中宝</title>
 
     <!-- This template defaults to the iOS CSS theme. To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
         http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html
@@ -30,10 +30,11 @@
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
 
+    <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+<body class="layout-lightblue">
 	<!-- Status bar overlay for full screen mode (PhoneGap) -->
 	<div class="statusbar-overlay"></div>
 
@@ -57,7 +58,7 @@
 					<!-- Scrollable page content -->
 					<div class="page-content block" style="background: url(res/index-bg.jpg);">
 						<div class="content-block centered" align="center">
-							<img src="res/index-title.jpg" width="100%"></img>
+							<img src="res/index-title.jpg" width="100%"/>
 						</div>
 					</div>
 				</div>
@@ -70,24 +71,32 @@
 				<div class="page">
 					<!-- page-content has additional login-screen content -->
 					<div class="page-content login-screen-content">
-						<div class="login-screen-title">My App</div>
+						<div class="login-screen-title">
+							<p>
+								<img src="res/logo.jpg"/>
+								TPCheck Lite
+							</p>
+							<p style="font-size: 26px;">
+								发电公司名称
+							</p>
+						</div>
 						<!-- Login form -->
 						<form>
 							<div class="list-block">
 								<ul>
 									<li class="item-content">
 										<div class="item-inner">
-											<div class="item-title label">Username</div>
+											<div class="item-title label">用户名</div>
 											<div class="item-input">
-												<input type="text" name="username" placeholder="Username">
+												<input type="text" name="username" placeholder="请输入用户名">
 											</div>
 										</div>
 									</li>
 									<li class="item-content">
 										<div class="item-inner">
-											<div class="item-title label">Password</div>
+											<div class="item-title label">密码</div>
 											<div class="item-input">
-												<input type="password" name="password" placeholder="Password">
+												<input type="password" name="password" placeholder="请输入密码">
 											</div>
 										</div>
 									</li>
@@ -96,10 +105,12 @@
 							<div class="list-block">
 								<ul>
 									<li>
-										<a href="#" class="item-link list-button close-login-screen">Sign In</a>
+										<a href="#" class="item-link list-button close-login-screen">登陆</a>
 									</li>
 								</ul>
-								<div class="list-block-labe">Some text with login information.</div>
+								<div class="list-block-labe" align="right">
+									<a style="font-size: 16px;" href="#">忘记密码</a>
+								</div>
 							</div>
 						</form>
 					</div>

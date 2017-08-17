@@ -14,10 +14,10 @@ $$(document).on('pageInit', function (e) {
     // Get page data from event data
     var page = e.detail.page;
 
-    console.log(page.name);
     if (page.name === 'function') {
         // Following code will be executed for page with data-page attribute equal to "index"
         myApp.loginScreen();
+        myApp.showNavbar($$('.func-navbar'));
     }
 })
 
