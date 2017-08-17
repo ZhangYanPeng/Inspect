@@ -17,8 +17,15 @@ $$(document).on('pageInit', function (e) {
     if (page.name === 'function') {
         // Following code will be executed for page with data-page attribute equal to "index"
         myApp.loginScreen();
-        myApp.showNavbar($$('.func-navbar'));
+    }
+
+    if (page.name === 'function') {
+        // Following code will be executed for page with data-page attribute equal to "index"
+        myApp.loginScreen();
     }
 })
 
+function loadPage(url){
+	mainView.router.loadPage(url);
+}
 

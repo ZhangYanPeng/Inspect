@@ -8,7 +8,7 @@ var $$ = Dom7;
 // Add view
 var mainView = myApp.addView('.view-main', {
     // Because we want to use dynamic navbar, we need to enable it for this view:
-    dynamicNavbar: true
+    
 });
 
 
@@ -18,5 +18,5 @@ function start(){
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
-        window.setTimeout("start()",1000);//1秒后跳转
+    window.setTimeout("start()",1000);//1秒后跳转
 });

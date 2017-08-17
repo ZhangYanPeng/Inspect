@@ -33,3 +33,14 @@
   display: inline-block;
   vertical-align: middle;
 }
+
+div[class*="col-"] {
+  background: #fff;
+  text-align: center;
+  color: #000;
+  border: 1px solid #ddd;
+  padding: 2em;
+}
+.row {
+  margin-bottom: 15px;
+}   
