@@ -19,13 +19,35 @@ $$(document).on('pageInit', function (e) {
         myApp.loginScreen();
     }
 
-    if (page.name === 'function') {
+    if (page.name === 'tpcheck') {
         // Following code will be executed for page with data-page attribute equal to "index"
-        myApp.loginScreen();
+        
+    }
+
+    if (page.name === 'information') {
+        // Following code will be executed for page with data-page attribute equal to "index"
+		myApp.popup('.popup-information');
     }
 })
 
-function loadPage(url){
-	mainView.router.loadPage(url);
-}
-
+function scanStart () {
+	cordova.plugins.barcodeScanner.scan(function (result) {
+		mainView.router.loadPage("information.html");
+	}, 
+	function (error) {
+		mainView.router.loadPage("information.html");
+	},
+	{
+		preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : true, // iOS and Android
+        showTorchButton : true, // iOS and Android
+        torchOn: true, // Android, launch with the torch switched on (if available)
+        saveHistory: true, // Android, save scan history (default false)
+        prompt : "Place a barcode inside the scan area", // Android
+        resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+        disableAnimations : true, // iOS
+        disableSuccessBeep: false // iOS and Android
+    });
+};

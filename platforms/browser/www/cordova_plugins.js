@@ -7,6 +7,14 @@ module.exports = [
         "clobbers": [
             "window.StatusBar"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-barcodescanner/www/barcodescanner.js",
+        "id": "cordova-plugin-barcodescanner.BarcodeScanner",
+        "pluginId": "cordova-plugin-barcodescanner",
+        "clobbers": [
+            "cordova.plugins.barcodeScanner"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -14,7 +22,9 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-console": "1.0.7",
-    "cordova-plugin-statusbar": "1.0.1"
+    "cordova-plugin-statusbar": "1.0.1",
+    "cordova-plugin-barcodescanner": "0.7.1",
+    "cordova-plugin-compat": "1.0.0"
 }
 // BOTTOM OF METADATA
 });

@@ -15,6 +15,12 @@
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "cordova-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
     "dependent_plugins": {},
@@ -26,11 +32,21 @@
             "clobbers": [
                 "window.StatusBar"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-barcodescanner/www/barcodescanner.js",
+            "id": "cordova-plugin-barcodescanner.BarcodeScanner",
+            "pluginId": "cordova-plugin-barcodescanner",
+            "clobbers": [
+                "cordova.plugins.barcodeScanner"
+            ]
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-console": "1.0.7",
-        "cordova-plugin-statusbar": "1.0.1"
+        "cordova-plugin-statusbar": "1.0.1",
+        "cordova-plugin-barcodescanner": "0.7.1",
+        "cordova-plugin-compat": "1.0.0"
     }
 }
