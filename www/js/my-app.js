@@ -16,7 +16,9 @@ $$(document).on('pageInit', function (e) {
 
     if (page.name === 'function') {
         // Following code will be executed for page with data-page attribute equal to "index"
-        myApp.loginScreen();
+        getUserIdentification();
+        if( account == null || account.id == -1)
+            myApp.loginScreen();
     }
 
     if (page.name === 'tpcheck') {
@@ -30,6 +32,10 @@ $$(document).on('pageInit', function (e) {
     }
 })
 
+$$('.log-in').click(function(){
+    login();
+});
+
 function scanStart () {
 	cordova.plugins.barcodeScanner.scan(function (result) {
 		mainView.router.loadPage("information.html");
@@ -41,9 +47,9 @@ function scanStart () {
 		preferFrontCamera : false, // iOS and Android
         showFlipCameraButton : true, // iOS and Android
         showTorchButton : true, // iOS and Android
-        torchOn: true, // Android, launch with the torch switched on (if available)
+        torchOn: false, // Android, launch with the torch switched on (if available)
         saveHistory: true, // Android, save scan history (default false)
-        prompt : "Place a barcode inside the scan area", // Android
+        prompt : "请将二维码置于框中", // Android
         resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
         formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
         orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
