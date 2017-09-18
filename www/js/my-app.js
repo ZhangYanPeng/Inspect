@@ -17,18 +17,31 @@ $$(document).on('pageInit', function (e) {
     if (page.name === 'function') {
         // Following code will be executed for page with data-page attribute equal to "index"
         getUserIdentification();
-        if( account == null || account.id == -1)
+        if( account == null || account.id == -1){
             myApp.loginScreen();
+        }else{
+            validateInfo(account.username,account.password);
+            authority = account.authority;
+            if(authority>0){
+                $$('.fun_title').html("支吊架掌中宝（企业版）");
+            }else{
+                $$('.fun_title').html("支吊架掌中宝（轻量版）");
+            }
+        }
     }
 
     if (page.name === 'tpcheck') {
         // Following code will be executed for page with data-page attribute equal to "index"
-        
     }
 
     if (page.name === 'information') {
         // Following code will be executed for page with data-page attribute equal to "index"
 		myApp.popup('.popup-information');
+    }
+
+    if (page.name === 'setting') {
+        // Following code will be executed for page with data-page attribute equal to "index"
+        init_setting();
     }
 })
 
@@ -45,7 +58,7 @@ function scanStart () {
 	},
 	{
 		preferFrontCamera : false, // iOS and Android
-        showFlipCameraButton : true, // iOS and Android
+        showFlipCameraButton : false, // iOS and Android
         showTorchButton : true, // iOS and Android
         torchOn: false, // Android, launch with the torch switched on (if available)
         saveHistory: true, // Android, save scan history (default false)
