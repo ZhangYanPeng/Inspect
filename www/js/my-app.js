@@ -43,6 +43,12 @@ $$(document).on('pageInit', function (e) {
         // Following code will be executed for page with data-page attribute equal to "index"
         init_setting();
     }
+
+    if (page.name === 'plan') {
+        // Following code will be executed for page with data-page attribute equal to "index"
+        check_type = page.query.type;
+        loadDevice();
+    }
 })
 
 $$('.log-in').click(function(){

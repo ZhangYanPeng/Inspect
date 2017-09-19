@@ -10,9 +10,9 @@ var plan_content = "";
 
 //1：支吊架
 var check_type;
-var tmp_type;
 getSetting();
 
+var devices;
 
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
