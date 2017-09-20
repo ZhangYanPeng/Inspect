@@ -1,6 +1,6 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://10.171.237.218:8080/tpri/app/";
+var baseUrl = "http://10.170.234.255:8080/tpri/app/";
 var account;
 var authority;
 
@@ -13,6 +13,7 @@ var check_type;
 getSetting();
 
 var devices;
+var progress;
 
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;

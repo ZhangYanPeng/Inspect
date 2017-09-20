@@ -46,8 +46,7 @@ $$(document).on('pageInit', function (e) {
 
     if (page.name === 'plan') {
         // Following code will be executed for page with data-page attribute equal to "index"
-        check_type = page.query.type;
-        loadDevice();
+        presentPlan();
     }
 })
 
@@ -57,10 +56,9 @@ $$('.log-in').click(function(){
 
 function scanStart () {
 	cordova.plugins.barcodeScanner.scan(function (result) {
-		mainView.router.loadPage("information.html");
+		mainView.router.loadPage("information.html?");
 	}, 
 	function (error) {
-		mainView.router.loadPage("information.html");
 	},
 	{
 		preferFrontCamera : false, // iOS and Android
