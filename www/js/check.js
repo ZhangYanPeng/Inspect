@@ -82,3 +82,79 @@ function presentPlan(){
 	$$('.uncomplete').html("").append(unc_ul);
 	$$('.complete').html("").append(c_ul);
 }
+
+
+function scanStart () {
+	cordova.plugins.barcodeScanner.scan(function (result) {
+        var device = JSON.parse(result.text);
+        alert(result.text);
+        alert(device.id);
+		mainView.router.loadPage("information.html?id="+device.id);
+	}, 
+	function (error) {
+	},
+	{
+		preferFrontCamera : false, // iOS and Android
+        showFlipCameraButton : false, // iOS and Android
+        showTorchButton : true, // iOS and Android
+        torchOn: false, // Android, launch with the torch switched on (if available)
+        saveHistory: true, // Android, save scan history (default false)
+        prompt : "请将二维码置于框中", // Android
+        resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+        formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+        orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+        disableAnimations : true, // iOS
+        disableSuccessBeep: false // iOS and Android
+    });
+};
+
+function loadDeviceInfo(did){
+	$$.ajax({
+		async : true,
+		cache : false,
+		type : 'GET',
+		crossDomain : true,
+		url : baseUrl + 'loadDeviceInfo',
+		data :  { id: did},
+		dataType : "json",
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		error : function(e,status) {
+			loadLocalDeviceInfo(did);
+		},
+		success : function(data) {
+			$$('#deviceinfo').html("");
+			presentDevInfo(data);
+		}
+	});
+}
+
+function loadLocalDeviceInfo(did){
+	var c_dev = null;
+	$$.each(devices,function(index,value){
+		var tmp = new Array();
+		$$.each(value.devices,function(ind,val){
+			if(val.id == did){
+				c_dev = val;
+				return false
+			}
+		});
+		if(c_dev != null)
+			return false;
+	});
+	if( c_dev == null)
+		return;
+	else{
+		presentDevInfo(c_dev.deviceInfos);
+	}
+}
+
+function presentDevInfo(infos){
+	$$.each(infos,function(index,value){
+		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
+		var content = $$("<div></div>").attr('class','item-after').append(value.value);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#deviceinfo').append(li);
+	});
+
+}
