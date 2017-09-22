@@ -87,8 +87,8 @@ function presentPlan(){
 function scanStart () {
 	cordova.plugins.barcodeScanner.scan(function (result) {
         var device = JSON.parse(result.text);
-        alert(result.text);
-        alert(device.id);
+        completeCheck(device.id);
+        presentPlan();
 		mainView.router.loadPage("information.html?id="+device.id);
 	}, 
 	function (error) {
@@ -123,7 +123,7 @@ function loadDeviceInfo(did){
 		},
 		success : function(data) {
 			$$('#deviceinfo').html("");
-			presentDevInfo(data);
+			presentDevInfo(data,did);
 		}
 	});
 }
@@ -144,11 +144,13 @@ function loadLocalDeviceInfo(did){
 	if( c_dev == null)
 		return;
 	else{
-		presentDevInfo(c_dev.deviceInfos);
+		$$('#deviceinfo').html("");
+		presentDevInfo(c_dev.deviceInfos,did);
 	}
 }
 
-function presentDevInfo(infos){
+function presentDevInfo(infos,did){
+	$$('.checkrecord').attr('href','record.html?id='+did);
 	$$.each(infos,function(index,value){
 		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
 		var content = $$("<div></div>").attr('class','item-after').append(value.value);
@@ -156,5 +158,20 @@ function presentDevInfo(infos){
 		var li = $$("<li></li>").attr('class','item-content').append(item);
 		$$('#deviceinfo').append(li);
 	});
+}
 
+function completeCheck(did){
+	$$.each(devices,function(index,value){
+		$$.each(value.devices,function(ind,val){
+			if(val.id == did){
+				try {
+					progress[index][ind]=1;
+				} catch(err) {
+					alert("err");
+					return false
+				} 
+				return false
+			}
+		});
+	});
 }

@@ -31,22 +31,22 @@ $$(document).on('pageInit', function (e) {
     }
 
     if (page.name === 'tpcheck') {
-        // Following code will be executed for page with data-page attribute equal to "index"
     }
 
     if (page.name === 'information') {
-        // Following code will be executed for page with data-page attribute equal to "index"
 		loadDeviceInfo(page.query.id);
     }
 
     if (page.name === 'setting') {
-        // Following code will be executed for page with data-page attribute equal to "index"
         init_setting();
     }
 
     if (page.name === 'plan') {
-        // Following code will be executed for page with data-page attribute equal to "index"
         presentPlan();
+    }
+
+    if (page.name === 'record') {
+        initRecord();
     }
 })
 
