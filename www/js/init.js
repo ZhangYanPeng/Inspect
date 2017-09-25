@@ -1,6 +1,6 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://10.170.234.255:8080/tpri/app/";
+var baseUrl = "http://10.170.231.44:8080/tpri/app/";
 var account;
 var authority;
 

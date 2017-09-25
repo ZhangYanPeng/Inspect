@@ -20,8 +20,10 @@
     "homepage": "https://github.com/phonegap/phonegap-template-framework7",
     "dependencies": {
         "cordova-plugin-barcodescanner": "^0.7.1",
+        "cordova-plugin-camera": "^2.4.1",
         "cordova-plugin-compat": "^1.0.0",
         "cordova-plugin-console": "~1.0.1",
+        "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-statusbar": "~1.0.1",
         "cordova-plugin-whitelist": "~1.2.0"
     },
@@ -30,7 +32,9 @@
             "cordova-plugin-barcodescanner": {},
             "cordova-plugin-console": {},
             "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {}
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-camera": {},
+            "cordova-plugin-file": {}
         }
     }
 }
