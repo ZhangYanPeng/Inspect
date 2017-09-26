@@ -1,12 +1,14 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://10.170.231.44:8080/tpri/app/";
+var baseUrl = "http://10.170.234.255:8080/tpri/app/";
 var account;
 var authority;
 
 var upload_enable = 1;
 var plan_enable = 0;
 var plan_content = "";
+
+var records;
 
 //1：支吊架
 var check_type;
@@ -58,6 +60,7 @@ function getSetting(){
 	else{
 		storeSetting();
 	}
+	var records = storage["records"];
 }
 
 function storeSetting(){
