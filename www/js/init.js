@@ -9,6 +9,7 @@ var plan_enable = 0;
 var plan_content = "";
 
 var records;
+var max_records_lenght = 50;
 
 //1：支吊架
 var check_type;
