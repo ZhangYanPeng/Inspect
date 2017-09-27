@@ -9,14 +9,15 @@ function init_setting(){
 		$$('.plan-enable').attr('checked',true);
 		setPlan(1);
 	}else{
-		$$('.upload-enable').removeAttr('checked');
+		$$('.plan-enable').removeAttr('checked');
 	}
 
 	$$('.upload-enable').change(function () { 
-		if( $$('.upload-enable').prop('checked') == true )
-			upload_enable = 1;
-		else
+		if( $$('.upload-enable').prop('checked') == true ){
+			upload_enable = 1;}
+		else{
 			upload_enable = 0;
+		}
 		storeSetting();
 	});
 

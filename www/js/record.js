@@ -15,11 +15,12 @@ function initRecord(did){
 		success : function(data) {
 			$$(".check-item").html("");
 			$$("#images").html("");
+			$$("#dev-id").val(did);
 			$$.each(data,function(index,value){
-				var in_it = $$('<input></input>').attr({type : 'checkbox', name : 'ci-option', value : value.id});
-				var d_icon = $$('<div></div>').attr('class','item-media').append($$('<i></i>').attr('class','icon icon-form-checkbox'));
+				var in_it = $$('<input></input>').attr({type : 'radio', name : 'ci-option', value : value.id});
+				var d_icon = $$('<div></div>').attr('class','item-media').append($$('<i></i>').attr('class','icon icon-form-radio'));
 				var d_con = $$('<div></div>').attr('class','item-inner').append($$('<div></div>').attr('class','item-title').append(value.description));
-				var la = $$('<label></label>').attr('class','label-checkbox item-content').append(in_it).append(d_icon).append(d_con);
+				var la = $$('<label></label>').attr('class','label-radio item-content').append(in_it).append(d_icon).append(d_con);
 				var li = $$('<li></li>').append(la);
 				$$(".check-item").append(li);
 			});
@@ -60,7 +61,7 @@ function createNewFileEntry(imgUri) {
 		    var op = $$("<a></a>").attr('href','javascript:delImg('+timestamp+')').attr('class','link').append("删除");
 		    var div_foot = $$("<div></div>").attr('class','card-footer').append(op);
 		    var div_card = $$("<div></div>").attr({'class':'card demo-card-header-pic','width': '200'}).append(div_con).append(div_foot);
-		    var div_item = $$("<div></div>").attr("id",timestamp).append(div_card);
+		    var div_item = $$("<div></div>").attr("id",timestamp).attr('class','rec_pic').append(div_card);
 		    $$("#images").append(div_item);
         }, function(){alert("Create File Fail");});
 
@@ -69,7 +70,7 @@ function createNewFileEntry(imgUri) {
 
 function delImg(id){
 	$$("#"+id).remove();
-	window.resolveLocalFileSystemURL(cordova.file.dataDirectory+id+".jpg", function (fileEntry) {  
+	window.resolveLocalFileSystemURL(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+id+".jpg", function (fileEntry) {  
 		fileEntry.remove(function () {  
 			console.log('delete success');  
 		}, function (err) {  
@@ -115,3 +116,31 @@ function writeFile(fileEntry, dataObj) {
         fileWriter.write(dataObj);
     });
 }
+
+function saveRecord(){
+	var pics = new Array();
+	$$.each($$(".rec_pic"),function(index,value){
+		pics .push(cordova.file.dataDirectory+value.id+'.jpg');
+	});
+	var record = new object();
+	record.account = account;
+	record.device.id = $$("#dev-id").val();
+	var myDate = new Date();
+	record.date = myDate.toLocaleTimeString();
+	record.record = $$("#record").val();
+	record.pictures = pics;
+	records.push(record);
+	records.upload = 0;
+	while(records.length > max_records_lenght)
+		records.shift();
+	if(upload_enable == 1){
+		$$.each(records,function(index,value){
+			if(value.upload == 0 )
+				upload(value);
+		});
+	}
+}
+
+function uploadRecord(record){
+
+};
