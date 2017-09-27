@@ -24,6 +24,7 @@
         "cordova-plugin-compat": "^1.0.0",
         "cordova-plugin-console": "~1.0.1",
         "cordova-plugin-file": "^4.3.3",
+        "cordova-plugin-file-transfer": "^1.6.3",
         "cordova-plugin-statusbar": "~1.0.1",
         "cordova-plugin-whitelist": "~1.2.0"
     },
@@ -34,7 +35,8 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "cordova-plugin-camera": {},
-            "cordova-plugin-file": {}
+            "cordova-plugin-file": {},
+            "cordova-plugin-file-transfer": {}
         }
     }
 }
