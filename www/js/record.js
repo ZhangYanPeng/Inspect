@@ -120,7 +120,7 @@ function writeFile(fileEntry, dataObj) {
 function saveRecord(){
 	var pics = new Array();
 	$$.each($$(".rec_pic"),function(index,value){
-		pics .push(cordova.file.dataDirectory+value.id+'.jpg');
+		pics .push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
 	});
 	var record = new object();
 	record.account = account;
@@ -130,10 +130,13 @@ function saveRecord(){
 	record.record = $$("#record").val();
 	record.pictures = pics;
 	records.push(record);
-	records.upload = 0;
+	record.upload = 0;
 	while(records.length > max_records_lenght)
 		records.shift();
+
+	console(records.length);
 	if(upload_enable == 1){
+		console(records.length);
 		$$.each(records,function(index,value){
 			if(value.upload == 0 )
 				upload(value);
@@ -142,5 +145,28 @@ function saveRecord(){
 }
 
 function uploadRecord(record){
+	console(record.pictures.length);
+	$$.each(record.pictures,function(index,value){
+		uploadPic(value);
+	});
 
 };
+
+function uploadPic(pic){
+	window.resolveLocalFileSystemURL(pic, function (fileEntry) {  
+		var fileURL = fileEntry.toURL();
+	    var success = function (r) {
+	        console.log("Successful upload...");
+	    }
+	    var fail = function (error) {
+	        alert("An error has occurred: Code = " + error.code);
+	    }
+	    var options = new FileUploadOptions();
+	    options.fileKey = "file";
+	    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+	    options.mimeType = "text/plain";
+	    var ft = new FileTransfer();
+	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
+
+	});
+}
