@@ -61,7 +61,10 @@ function getSetting(){
 	else{
 		storeSetting();
 	}
-	var records = storage["records"];
+	records = storage["records"];
+	if(records == null){
+		records = new Array();
+	}
 }
 
 function storeSetting(){

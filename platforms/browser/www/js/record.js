@@ -51,10 +51,10 @@ function createNewFileEntry(imgUri) {
     window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function success(dirEntry) {
         // JPEG file
         var timestamp=new Date().getTime();
-        dirEntry.getFile(timestamp+".jpg", { create: true, exclusive: false }, function (fileEntry) {
+        dirEntry.getFile($$("#dev-id").val()+"-"+timestamp+".jpg", { create: true, exclusive: false }, function (fileEntry) {
 
             // Do something with it, like write to it, upload it, etc.
-            writeFile(fileEntry, imgUri);
+            saveFile(fileEntry, imgUri);
             // displayFileData(fileEntry.fullPath, "File copied to");
             var img = $$("<img></img>").attr({'src': imgUri, width: '100%'});
 		    var div_con = $$("<div></div>").attr('class','card-content').append(img);
@@ -95,24 +95,36 @@ function setOptions(srcType) {
     return options;
 }
 
+function saveFile(fileEntry, imgUri) {
+    // Create a FileWriter object for our FileEntry (log.txt).
+    window.resolveLocalFileSystemURL(imgUri, function (fe) { 
+	    fe.file(function (file) {
+	        var reader = new FileReader();
+	        reader.onloadend = function() {
+	        	console.log("load success");
+	            var blob = new Blob([new Uint8Array(this.result)], { type: "image/jpg" });
+	            writeFile(fileEntry, blob);
+	        };
+	        reader.readAsArrayBuffer(file);
+	    }, function(){console.log("load fail!")});
+	});
+}
+
 function writeFile(fileEntry, dataObj) {
     // Create a FileWriter object for our FileEntry (log.txt).
     fileEntry.createWriter(function (fileWriter) {
-
         fileWriter.onwriteend = function() {
             console.log("Successful file write...");
+            if (dataObj.type == "image/png") {
+                readBinaryFile(fileEntry);
+            }
+            else {
+                readFile(fileEntry);
+            }
         };
-
-        fileWriter.onerror = function (e) {
+        fileWriter.onerror = function(e) {
             console.log("Failed file write: " + e.toString());
         };
-
-        // If data object is not passed in,
-        // create a new Blob instead.
-        if (!dataObj) {
-            dataObj = new Blob(['some file data'], { type: 'text/plain' });
-        }
-
         fileWriter.write(dataObj);
     });
 }
@@ -120,32 +132,29 @@ function writeFile(fileEntry, dataObj) {
 function saveRecord(){
 	var pics = new Array();
 	$$.each($$(".rec_pic"),function(index,value){
-		pics .push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
+		pics.push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
 	});
-	var record = new object();
-	record.account = account;
-	record.device.id = $$("#dev-id").val();
+	var record = new Object();
+	record.account = JSON.stringify(account);
+	record.device = $$("#dev-id").val();
 	var myDate = new Date();
 	record.date = myDate.toLocaleTimeString();
 	record.record = $$("#record").val();
 	record.pictures = pics;
-	records.push(record);
 	record.upload = 0;
+	records.push(record);
 	while(records.length > max_records_lenght)
 		records.shift();
 
-	console(records.length);
 	if(upload_enable == 1){
-		console(records.length);
 		$$.each(records,function(index,value){
 			if(value.upload == 0 )
-				upload(value);
+				uploadRecord(value);
 		});
 	}
 }
 
 function uploadRecord(record){
-	console(record.pictures.length);
 	$$.each(record.pictures,function(index,value){
 		uploadPic(value);
 	});
