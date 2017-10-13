@@ -51,6 +51,7 @@ function presentPlan(){
 		var unc_ul_item = $$("<ul></ul>");
 		var c_ul_item = $$("<ul></ul>");
 
+		console.log(value);
 		$$.each(value.devices,function(ind,val){
 			if( progress[index][ind] == 0 ){
 				console.log(val);

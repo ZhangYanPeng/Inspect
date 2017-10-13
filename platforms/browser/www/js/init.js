@@ -11,7 +11,8 @@ var plan_content = "";
 var records;
 var max_records_lenght = 50;
 
-//1：支吊架
+//1：管道
+//2：支吊架
 var check_type="";
 getSetting();
 
