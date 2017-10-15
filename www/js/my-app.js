@@ -46,6 +46,10 @@ $$(document).on('pageInit', function (e) {
     if (page.name === 'record') {
         initRecord(page.query.id);
     }
+
+    if (page.name === 'reclist') {
+        showRecords();
+    }
 })
 
 $$('.log-in').click(function(){

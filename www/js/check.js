@@ -24,7 +24,6 @@ function loadDevice() {
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
-			console.log(e);
 			myApp.alert("加载失败，请重试","抱歉");
 		},
 		success : function(data) {
@@ -54,11 +53,9 @@ function presentPlan(){
 		console.log(value);
 		$$.each(value.devices,function(ind,val){
 			if( progress[index][ind] == 0 ){
-				console.log(val);
 				var unc_li_item = $$("<li></li>").append(val.name);
 				unc_ul_item.append(unc_li_item);
 			}else{
-				console.log(val);
 				var c_li_item = $$("<li></li>").append(val.name);
 				c_ul_item.append(c_li_item);
 			}
@@ -142,8 +139,10 @@ function loadLocalDeviceInfo(did){
 		if(c_dev != null)
 			return false;
 	});
-	if( c_dev == null)
-		return;
+	if( c_dev == null){
+		$$('#deviceinfo').html("");
+		presentDevInfo({},did);
+	}
 	else{
 		$$('#deviceinfo').html("");
 		presentDevInfo(c_dev.deviceInfos,did);

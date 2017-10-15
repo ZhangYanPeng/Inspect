@@ -17,7 +17,7 @@ function initRecord(did){
 			$$("#images").html("");
 			$$("#dev-id").val(did);
 			$$.each(data,function(index,value){
-				var in_it = $$('<input></input>').attr({type : 'radio', id : 'ci-option', name : 'ci-option', value : value.id});
+				var in_it = $$('<input></input>').attr({type : 'radio', id : 'ci-option', name : 'ci-option', value : value.id+"|"+value.description});
 				var d_icon = $$('<div></div>').attr('class','item-media').append($$('<i></i>').attr('class','icon icon-form-radio'));
 				var d_con = $$('<div></div>').attr('class','item-inner').append($$('<div></div>').attr('class','item-title').append(value.description));
 				var la = $$('<label></label>').attr('class','label-radio item-content').append(in_it).append(d_icon).append(d_con);
@@ -141,13 +141,15 @@ function saveRecord(){
 	record.device = $$("#dev-id").val();
 	record.date = getNowFormatDate();
 	record.record = $$("#record").val();
-	record.ci = $$("#ci-option").val();
+	record.ci = $$("#ci-option").val().split("|")[0];
+	record.cides = $$("#ci-option").val().split("|")[1];
 	record.pictures = pics;
 	record.picStr = picStr;
 	record.upload = 0;
 	records.push(record);
 	while(records.length > max_records_lenght)
 		records.shift();
+	storeRecord();
 
 	if(upload_enable == 1){
 		uploadAllRecords();
@@ -169,6 +171,7 @@ function uploadAllRecords(){
 			}
 		}
 	});
+	storeRecord();
 }
 
 function uploadRecord(record){
@@ -180,7 +183,7 @@ function uploadRecord(record){
 		}
 	});
 	$$.ajax({
-		async : true,
+		async : false,
 		cache : false,
 		method : 'POST',
 		crossDomain : true,
@@ -194,6 +197,7 @@ function uploadRecord(record){
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
+			console.log(e);
 			alert("err");
 		},
 		success : function(data) {
@@ -202,19 +206,46 @@ function uploadRecord(record){
 };
 
 function uploadPic(pic){
+	var us = -1;
 	window.resolveLocalFileSystemURL(pic, function (fileEntry) {  
 		var fileURL = fileEntry.toURL();
 	    var success = function (r) {
-	        return 1;
+	        us = 1;
 	    }
 	    var fail = function (error) {
-	        return 0;
+	        us = 0;
 	    }
 	    var options = new FileUploadOptions();
 	    options.fileKey = "file";
 	    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
 	    options.mimeType = "text/plain";
+
 	    var ft = new FileTransfer();
 	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
 	});
+}
+
+function uploadAll(){
+	$$.each(records,function(index,value){
+		if(value.upload == 0 ){
+			if( uploadRecord(value) != 1 ){
+				myApp.alert("网络状态不佳，上传失败！","抱歉");
+				return false;
+			}else{
+				value.upload=1;
+			}
+		}
+	});
+
+	var num = 0;
+	$$.each(records,function(index,value){
+		if(value.upload == 0 ){
+			if( value.upload==0 )
+				num = num+1;
+		}
+	});
+	if( num > 0 )
+		myApp.alert("已完成同步，剩余"+num+"条信息未上传","通知");
+	else
+		myApp.alert("已完成所有信息的上传","通知");
 }

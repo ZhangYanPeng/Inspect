@@ -1,6 +1,6 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://192.168.1.133:8080/tpri/app/";
+var baseUrl = "http://10.170.234.255:8080/tpri/app/";
 var account;
 var authority;
 
@@ -62,15 +62,22 @@ function getSetting(){
 	else{
 		storeSetting();
 	}
-	records = storage["records"];
-	if(records == null){
+	rec = storage["records"];
+	if(rec == null || rec == ""){
 		records = new Array();
+	}else{
+		records = JSON.parse(rec)
 	}
 }
 
 function storeSetting(){
 	var storage = window.localStorage;
 	storage["upload_enable"] = upload_enable;
+}
+
+function storeRecord(){
+	var storage = window.localStorage;
+	storage["records"] = JSON.stringify(records);
 }
 
 function getNowFormatDate() {
