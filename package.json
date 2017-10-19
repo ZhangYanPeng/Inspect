@@ -27,7 +27,8 @@
         "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-file-transfer": "^1.6.3",
         "cordova-plugin-statusbar": "~1.0.1",
-        "cordova-plugin-whitelist": "~1.2.0"
+        "cordova-plugin-whitelist": "~1.2.0",
+        "phonegap-plugin-barcodescanner": "file:plugins/phonegap-plugin-barcodescanner"
     },
     "cordova": {
         "plugins": {
