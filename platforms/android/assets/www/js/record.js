@@ -1,0 +1,181 @@
+function initRecord(did){
+	$$.ajax({
+		async : true,
+		cache : false,
+		type : 'GET',
+		crossDomain : true,
+		url : baseUrl + 'loadCheckItem',
+		data :  { id: did},
+		dataType : "json",
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		error : function(e,status) {
+			alert("err");
+			loadCheckItem(did);
+		},
+		success : function(data) {
+			$$(".check-item").html("");
+			$$("#images").html("");
+			$$("#dev-id").val(did);
+			$$.each(data,function(index,value){
+				var in_it = $$('<input></input>').attr({type : 'radio', name : 'ci-option', value : value.id});
+				var d_icon = $$('<div></div>').attr('class','item-media').append($$('<i></i>').attr('class','icon icon-form-radio'));
+				var d_con = $$('<div></div>').attr('class','item-inner').append($$('<div></div>').attr('class','item-title').append(value.description));
+				var la = $$('<label></label>').attr('class','label-radio item-content').append(in_it).append(d_icon).append(d_con);
+				var li = $$('<li></li>').append(la);
+				$$(".check-item").append(li);
+			});
+		}
+	});
+}
+
+function takephoto(){
+	openCamera(null);
+}
+
+function openCamera(selection) {
+    var srcType = Camera.PictureSourceType.CAMERA;
+    var options = setOptions(Camera.PictureSourceType.CAMERA);
+
+    navigator.camera.getPicture(function cameraSuccess(imageUri) {
+
+        createNewFileEntry(imageUri);
+        // You may choose to copy the picture, save it somewhere, or upload.
+
+    }, function cameraError(error) {
+        console.log("Unable to obtain picture: " + error, "app");
+
+    }, options);
+}
+
+function createNewFileEntry(imgUri) {
+    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function success(dirEntry) {
+        // JPEG file
+        var timestamp=new Date().getTime();
+        dirEntry.getFile($$("#dev-id").val()+"-"+timestamp+".jpg", { create: true, exclusive: false }, function (fileEntry) {
+
+            // Do something with it, like write to it, upload it, etc.
+            saveFile(fileEntry, imgUri);
+            // displayFileData(fileEntry.fullPath, "File copied to");
+            var img = $$("<img></img>").attr({'src': imgUri, width: '100%'});
+		    var div_con = $$("<div></div>").attr('class','card-content').append(img);
+		    var op = $$("<a></a>").attr('href','javascript:delImg('+timestamp+')').attr('class','link').append("删除");
+		    var div_foot = $$("<div></div>").attr('class','card-footer').append(op);
+		    var div_card = $$("<div></div>").attr({'class':'card demo-card-header-pic','width': '200'}).append(div_con).append(div_foot);
+		    var div_item = $$("<div></div>").attr("id",timestamp).attr('class','rec_pic').append(div_card);
+		    $$("#images").append(div_item);
+        }, function(){alert("Create File Fail");});
+
+    }, function(){alert("Resovel url Fail");});
+}
+
+function delImg(id){
+	$$("#"+id).remove();
+	window.resolveLocalFileSystemURL(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+id+".jpg", function (fileEntry) {  
+		fileEntry.remove(function () {  
+			console.log('delete success');  
+		}, function (err) {  
+			console.error(err);  
+		}, function () {  
+			console.log('file not exist');  
+		});  
+	});
+}
+
+function setOptions(srcType) {
+    var options = {
+        // Some common settings are 20, 50, and 100
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        // In this app, dynamically set the picture source, Camera or photo gallery
+        sourceType: srcType,
+        encodingType: Camera.EncodingType.JPEG,
+        mediaType: Camera.MediaType.PICTURE,
+        correctOrientation: true,  //Corrects Android orientation quirks
+    }
+    return options;
+}
+
+function saveFile(fileEntry, imgUri) {
+    // Create a FileWriter object for our FileEntry (log.txt).
+    window.resolveLocalFileSystemURL(imgUri, function (fe) { 
+	    fe.file(function (file) {
+	        var reader = new FileReader();
+	        reader.onloadend = function() {
+	        	console.log("load success");
+	            var blob = new Blob([new Uint8Array(this.result)], { type: "image/jpg" });
+	            writeFile(fileEntry, blob);
+	        };
+	        reader.readAsArrayBuffer(file);
+	    }, function(){console.log("load fail!")});
+	});
+}
+
+function writeFile(fileEntry, dataObj) {
+    // Create a FileWriter object for our FileEntry (log.txt).
+    fileEntry.createWriter(function (fileWriter) {
+        fileWriter.onwriteend = function() {
+            console.log("Successful file write...");
+            if (dataObj.type == "image/png") {
+                readBinaryFile(fileEntry);
+            }
+            else {
+                readFile(fileEntry);
+            }
+        };
+        fileWriter.onerror = function(e) {
+            console.log("Failed file write: " + e.toString());
+        };
+        fileWriter.write(dataObj);
+    });
+}
+
+function saveRecord(){
+	var pics = new Array();
+	$$.each($$(".rec_pic"),function(index,value){
+		pics.push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
+	});
+	var record = new Object();
+	record.account = JSON.stringify(account);
+	record.device = $$("#dev-id").val();
+	var myDate = new Date();
+	record.date = myDate.toLocaleTimeString();
+	record.record = $$("#record").val();
+	record.pictures = pics;
+	record.upload = 0;
+	records.push(record);
+	while(records.length > max_records_lenght)
+		records.shift();
+
+	if(upload_enable == 1){
+		$$.each(records,function(index,value){
+			if(value.upload == 0 )
+				uploadRecord(value);
+		});
+	}
+}
+
+function uploadRecord(record){
+	$$.each(record.pictures,function(index,value){
+		uploadPic(value);
+	});
+
+};
+
+function uploadPic(pic){
+	window.resolveLocalFileSystemURL(pic, function (fileEntry) {  
+		var fileURL = fileEntry.toURL();
+	    var success = function (r) {
+	        console.log("Successful upload...");
+	    }
+	    var fail = function (error) {
+	        alert("An error has occurred: Code = " + error.code);
+	    }
+	    var options = new FileUploadOptions();
+	    options.fileKey = "file";
+	    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+	    options.mimeType = "text/plain";
+	    var ft = new FileTransfer();
+	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
+
+	});
+}
