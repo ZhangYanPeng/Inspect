@@ -1,6 +1,7 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://10.170.234.255:8080/tpri/app/";
+var severUrl = "http://192.168.23.1:8080/";
+var baseUrl = severUrl+"tpri/app/";
 var account;
 var authority;
 
@@ -11,8 +12,9 @@ var plan_content = "";
 var records;
 var max_records_lenght = 50;
 
-//1：支吊架
-var check_type;
+//1：管道
+//2：支吊架
+var check_type="";
 getSetting();
 
 var devices;
@@ -61,9 +63,11 @@ function getSetting(){
 	else{
 		storeSetting();
 	}
-	records = storage["records"];
-	if(records == null){
+	rec = storage["records"];
+	if(rec == null || rec == ""){
 		records = new Array();
+	}else{
+		records = JSON.parse(rec)
 	}
 }
 
@@ -71,3 +75,26 @@ function storeSetting(){
 	var storage = window.localStorage;
 	storage["upload_enable"] = upload_enable;
 }
+
+function storeRecord(){
+	var storage = window.localStorage;
+	storage["records"] = JSON.stringify(records);
+}
+
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+} 

@@ -7,6 +7,7 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.barcodeScanner"
         ]
+<<<<<<< HEAD
     },
     {
         "id": "cordova-plugin-camera.Camera",
@@ -39,14 +40,20 @@ module.exports = [
         "clobbers": [
             "CameraPopoverHandle"
         ]
+=======
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "cordova-plugin-compat": "1.0.0",
+<<<<<<< HEAD
     "cordova-plugin-barcodescanner": "0.7.1",
     "cordova-plugin-camera": "2.4.1"
+=======
+    "cordova-plugin-barcodescanner": "0.7.1"
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 };
 // BOTTOM OF METADATA
 });

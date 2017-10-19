@@ -35,6 +35,13 @@ $$(document).on('pageInit', function (e) {
 		loadDeviceInfo(page.query.id);
     }
 
+<<<<<<< HEAD
+=======
+    if (page.name === 'device') {
+        loadDeviceInfo(page.query.id);
+    }
+
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
     if (page.name === 'setting') {
         init_setting();
     }
@@ -46,6 +53,35 @@ $$(document).on('pageInit', function (e) {
     if (page.name === 'record') {
         initRecord(page.query.id);
     }
+<<<<<<< HEAD
+=======
+
+    if (page.name === 'reclist') {
+        showRecords();
+    }
+
+    if (page.name === 'picture') {
+        showPic(page.query.pic);
+    }
+
+    if (page.name === 'me') {
+        loadAccountInfo();
+    }
+
+    if (page.name === 'mesage') {
+        // 会话flag
+        var conversationStarted = false;
+         
+        // Init Messages
+        var myMessages = myApp.messages('.messages', {
+          autoLayout:true
+        });
+        
+        // Init Messagebar
+        var myMessagebar = myApp.messagebar('.messagebar');
+    }
+ 
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 })
 
 $$('.log-in').click(function(){

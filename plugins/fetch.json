@@ -62,5 +62,16 @@
     },
     "is_top_level": true,
     "variables": {}
+<<<<<<< HEAD
+=======
+  },
+  "phonegap-plugin-barcodescanner": {
+    "source": {
+      "type": "local",
+      "path": "D:\\Git\\Inspect\\node_modules\\phonegap-plugin-barcodescanner"
+    },
+    "is_top_level": true,
+    "variables": {}
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
   }
 }

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "prepare_queue": {
     "installed": [],
     "uninstalled": []
@@ -19,4 +20,23 @@
       "PACKAGE_NAME": "com.phonegap.helloworld"
     }
   }
+=======
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-barcodescanner": {
+            "PACKAGE_NAME": "com.tpri.tpcheck"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.tpri.tpcheck"
+        }
+    }
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 }

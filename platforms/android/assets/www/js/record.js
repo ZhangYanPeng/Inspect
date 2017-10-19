@@ -17,7 +17,11 @@ function initRecord(did){
 			$$("#images").html("");
 			$$("#dev-id").val(did);
 			$$.each(data,function(index,value){
+<<<<<<< HEAD
 				var in_it = $$('<input></input>').attr({type : 'radio', name : 'ci-option', value : value.id});
+=======
+				var in_it = $$('<input></input>').attr({type : 'radio', id : 'ci-option', name : 'ci-option', value : value.id+"|"+value.description});
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 				var d_icon = $$('<div></div>').attr('class','item-media').append($$('<i></i>').attr('class','icon icon-form-radio'));
 				var d_con = $$('<div></div>').attr('class','item-inner').append($$('<div></div>').attr('class','item-title').append(value.description));
 				var la = $$('<label></label>').attr('class','label-radio item-content').append(in_it).append(d_icon).append(d_con);
@@ -131,20 +135,37 @@ function writeFile(fileEntry, dataObj) {
 
 function saveRecord(){
 	var pics = new Array();
+<<<<<<< HEAD
 	$$.each($$(".rec_pic"),function(index,value){
 		pics.push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
+=======
+	var picStr = "";
+	$$.each($$(".rec_pic"),function(index,value){
+		pics.push(cordova.file.dataDirectory+$$("#dev-id").val()+"-"+value.id+'.jpg');
+		picStr = picStr + ";" + $$("#dev-id").val()+"-"+value.id+'.jpg';
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 	});
 	var record = new Object();
 	record.account = JSON.stringify(account);
 	record.device = $$("#dev-id").val();
+<<<<<<< HEAD
 	var myDate = new Date();
 	record.date = myDate.toLocaleTimeString();
 	record.record = $$("#record").val();
 	record.pictures = pics;
+=======
+	record.date = getNowFormatDate();
+	record.record = $$("#record").val();
+	record.ci = $$("#ci-option").val().split("|")[0];
+	record.cides = $$("#ci-option").val().split("|")[1];
+	record.pictures = pics;
+	record.picStr = picStr;
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 	record.upload = 0;
 	records.push(record);
 	while(records.length > max_records_lenght)
 		records.shift();
+<<<<<<< HEAD
 
 	if(upload_enable == 1){
 		$$.each(records,function(index,value){
@@ -169,13 +190,112 @@ function uploadPic(pic){
 	    }
 	    var fail = function (error) {
 	        alert("An error has occurred: Code = " + error.code);
+=======
+	storeRecord();
+
+	if(upload_enable == 1){
+		uploadAllRecords();
+		if(check_type != "")
+			startCheck(check_type);
+		else
+			mainView.router.loadPage('function.html');
+	}
+}
+
+function uploadAllRecords(){
+	$$.each(records,function(index,value){
+		if(value.upload == 0 ){
+			if( uploadRecord(value) == 0 ){
+				myApp.alert("网络状态不佳，上传失败，请手动上传！","抱歉");
+				return false;
+			}else{
+				value.upload=1;
+			}
+		}
+	});
+	storeRecord();
+}
+
+function uploadRecord(record){
+	var sta = 1;
+	$$.each(record.pictures,function(index,value){
+		if( uploadPic(value) == 0 ){
+			sta = 0;
+			return sta;
+		}
+	});
+	$$.ajax({
+		async : false,
+		cache : false,
+		method : 'POST',
+		crossDomain : true,
+		url : baseUrl + 'uploadRecord',
+		data : {rec : JSON.stringify({ aid : JSON.parse(record.account).id,
+			did : record.device,
+			date : record.date,
+			content : record.record,
+			pics : record.picStr,
+			ciid : record.ci})},
+		dataType : "json",
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		error : function(e,status) {
+			console.log(e);
+			alert("err");
+		},
+		success : function(data) {
+		}
+	});
+};
+
+function uploadPic(pic){
+	var us = -1;
+	window.resolveLocalFileSystemURL(pic, function (fileEntry) {  
+		var fileURL = fileEntry.toURL();
+	    var success = function (r) {
+	        us = 1;
+	    }
+	    var fail = function (error) {
+	        us = 0;
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 	    }
 	    var options = new FileUploadOptions();
 	    options.fileKey = "file";
 	    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
 	    options.mimeType = "text/plain";
+<<<<<<< HEAD
 	    var ft = new FileTransfer();
 	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
 
 	});
+=======
+
+	    var ft = new FileTransfer();
+	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
+	});
+}
+
+function uploadAll(){
+	$$.each(records,function(index,value){
+		if(value.upload == 0 ){
+			if( uploadRecord(value) != 1 ){
+				myApp.alert("网络状态不佳，上传失败！","抱歉");
+				return false;
+			}else{
+				value.upload=1;
+			}
+		}
+	});
+
+	var num = 0;
+	$$.each(records,function(index,value){
+		if(value.upload == 0 ){
+			if( value.upload==0 )
+				num = num+1;
+		}
+	});
+	if( num > 0 )
+		myApp.alert("已完成同步，剩余"+num+"条信息未上传","通知");
+	else
+		myApp.alert("已完成所有信息的上传","通知");
+>>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
 }
