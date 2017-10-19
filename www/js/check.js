@@ -145,19 +145,40 @@ function loadLocalDeviceInfo(did){
 	}
 	else{
 		$$('#deviceinfo').html("");
-		presentDevInfo(c_dev.deviceInfos,did);
+		presentDevInfo(c_dev,did);
 	}
 }
 
-function presentDevInfo(infos,did){
+function presentDevInfo(device,did){
 	$$('.checkrecord').attr('href','record.html?id='+did);
-	$$.each(infos,function(index,value){
+	$$.each(device.deviceInfos,function(index,value){
 		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
 		var content = $$("<div></div>").attr('class','item-after').append(value.value);
 		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
 		var li = $$("<li></li>").attr('class','item-content').append(item);
 		$$('#deviceinfo').append(li);
 	});
+
+	$$(".reclist").html("");
+	var ul = $$("<ul></ul>");
+	$$.each(device.deviceCheckRecords,function(index,value){
+		var div_dat = $$("<div></div>").attr('class','item-title').append(value.date);
+		var div_inn = $$("<div></div>").attr('class','item-inner').append(div_dat);
+		var a = $$("<a></a>").attr('href',"#").attr('class','item-content item-link').append(div_inn);
+		var pc= $$("<p></p>").append(value.deviceCheckItem);
+		var pr = $$("<p></p>").append(value.record);
+		var pic = $$("<p></p>");
+		$$.each(value.pictures,function(ind,val){
+			var img = $$("<img></img>").attr('src',severUrl+val).attr('width','50em');
+			var a_img = $$("<a></a>").attr('href',"picture.html?pic="+severUrl+val).append(img);
+			pic.append(a_img);
+		});
+		var div_blo = $$("<div></div>").attr('class','content-block').append(pc).append(pr).append(pic);
+		var div_con = $$("<div></div>").attr('class','accordion-item-content').append(div_blo);
+		var li = $$("<li></li>").attr('class','accordion-item').append(a).append(div_con);
+		ul.append(li);
+	});
+	$$(".reclist").append(ul);
 }
 
 function completeCheck(did){

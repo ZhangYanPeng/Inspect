@@ -1,6 +1,7 @@
 // Initialize app
 var myApp = new Framework7();
-var baseUrl = "http://10.170.234.255:8080/tpri/app/";
+var severUrl = "http://192.168.23.1:8080/";
+var baseUrl = severUrl+"tpri/app/";
 var account;
 var authority;
 
@@ -21,6 +22,17 @@ var progress;
 
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
+
+// 会话flag
+var conversationStarted = false;
+ 
+// Init Messages
+var myMessages = myApp.messages('.messages', {
+  autoLayout:true
+});
+ 
+// Init Messagebar
+var myMessagebar = myApp.messagebar('.messagebar');
 
 // Add view
 var mainView = myApp.addView('.view-main', {
