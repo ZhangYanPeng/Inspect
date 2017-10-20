@@ -1,51 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "phonegap-template-framework7",
-  "version": "1.0.3",
-  "description": "A starter template for building PhoneGap apps with Framework7.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/phonegap/phonegap-template-framework7.git"
-  },
-  "author": "PhoneGap Team",
-  "license": "Apache-2.0.0",
-  "keywords": [
-    "ecosystem:phonegap",
-    "ecosystem:cordova",
-    "cordova:template",
-    "phonegap:template"
-  ],
-  "bugs": {
-    "url": "https://github.com/phonegap/phonegap-template-framework7/issues"
-  },
-  "homepage": "https://github.com/phonegap/phonegap-template-framework7",
-  "dependencies": {
-    "cordova-android": "^6.2.3",
-    "cordova-plugin-barcodescanner": "^0.7.1",
-    "cordova-plugin-camera": "^2.4.1",
-    "cordova-plugin-compat": "^1.0.0",
-    "cordova-plugin-console": "~1.0.1",
-    "cordova-plugin-file": "^4.3.3",
-    "cordova-plugin-file-transfer": "^1.6.3",
-    "cordova-plugin-statusbar": "~1.0.1",
-    "cordova-plugin-whitelist": "~1.2.0"
-  },
-  "cordova": {
-    "plugins": {
-      "cordova-plugin-barcodescanner": {},
-      "cordova-plugin-console": {},
-      "cordova-plugin-statusbar": {},
-      "cordova-plugin-whitelist": {},
-      "cordova-plugin-camera": {
-        "CAMERA_USAGE_DESCRIPTION": "",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION": ""
-      },
-      "cordova-plugin-file": {},
-      "cordova-plugin-file-transfer": {}
-    }
-  }
-}
-=======
     "name": "phonegap-template-framework7",
     "version": "1.0.3",
     "description": "A starter template for building PhoneGap apps with Framework7.",
@@ -79,14 +32,13 @@
     },
     "cordova": {
         "plugins": {
+            "cordova-plugin-camera": {},
             "cordova-plugin-barcodescanner": {},
             "cordova-plugin-console": {},
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
-            "cordova-plugin-camera": {},
             "cordova-plugin-file": {},
             "cordova-plugin-file-transfer": {}
         }
     }
 }
->>>>>>> 4d6670b15b19063e84435cf9327115e1187f88b5
