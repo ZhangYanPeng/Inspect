@@ -84,10 +84,11 @@ function presentPlan(){
 
 function scanStart () {
 	cordova.plugins.barcodeScanner.scan(function (result) {
-        var device = JSON.parse(result.text);
-        completeCheck(device.id);
+		var il = result.text.split(';');
+		var sid = il[0].split(':')[1];
+        completeCheck(sid);
         presentPlan();
-		mainView.router.loadPage("information.html?id="+device.id);
+		mainView.router.loadPage("information.html?id="+sid+"&content="+result.text);
 	}, 
 	function (error) {
 	},
@@ -106,7 +107,20 @@ function scanStart () {
     });
 };
 
-function loadDeviceInfo(did){
+function loadDeviceInfo(did,content){
+	$$('.checkrecord').attr('href','#');
+		var il = content.split(';');
+		for( var i = 1; i<il.length-1; i++ ){
+			var ti = il[i];
+			var pn = ti.split(':')[0];
+			var pv = ti.split(':')[1];
+			var title = $$("<div></div>").attr('class','item-title').append(pn);
+			var content = $$("<div></div>").attr('class','item-after').append(pv);
+			var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+			var li = $$("<li></li>").attr('class','item-content').append(item);
+			$$('#deviceinfo').append(li);
+		});
+	return;
 	$$.ajax({
 		async : true,
 		cache : false,
@@ -117,7 +131,7 @@ function loadDeviceInfo(did){
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
-			loadLocalDeviceInfo(did);
+			loadLocalDeviceInfo(did,content);
 		},
 		success : function(data) {
 			$$('#deviceinfo').html("");
@@ -140,9 +154,21 @@ function loadLocalDeviceInfo(did){
 			return false;
 	});
 	if( c_dev == null){
-		$$('#deviceinfo').html("");
-		presentDevInfo({},did);
-	}
+		$$('.checkrecord').attr('href','#');
+		var il = content.split(';');
+		for( var i = 1; i<il.length-1; i++ ){
+			var ti = il[i];
+			var pn = ti.split(':')[0];
+			var pv = ti.split(':')[1];
+			var title = $$("<div></div>").attr('class','item-title').append(pn);
+			var content = $$("<div></div>").attr('class','item-after').append(pv);
+			var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+			var li = $$("<li></li>").attr('class','item-content').append(item);
+			$$('#deviceinfo').append(li);
+		});
+
+		$$(".reclist").html("");
+		}
 	else{
 		$$('#deviceinfo').html("");
 		presentDevInfo(c_dev,did);

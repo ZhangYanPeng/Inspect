@@ -32,7 +32,7 @@ $$(document).on('pageInit', function (e) {
     }
 
     if (page.name === 'information') {
-		loadDeviceInfo(page.query.id);
+		loadDeviceInfo(page.query.id,page.query.content);
     }
 
     if (page.name === 'device') {
