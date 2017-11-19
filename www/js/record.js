@@ -33,22 +33,22 @@ function takephoto(){
 }
 
 function openCamera(selection) {
-    var srcType = Camera.PictureSourceType.CAMERA;
-    var options = setOptions(Camera.PictureSourceType.CAMERA);
+	var srcType = Camera.PictureSourceType.CAMERA;
+	var options = setOptions(Camera.PictureSourceType.CAMERA);
 
-    navigator.camera.getPicture(function cameraSuccess(imageUri) {
+	navigator.camera.getPicture(function cameraSuccess(imageUri) {
 
-        createNewFileEntry(imageUri);
+		createNewFileEntry(imageUri);
         // You may choose to copy the picture, save it somewhere, or upload.
 
     }, function cameraError(error) {
-        console.log("Unable to obtain picture: " + error, "app");
+    	console.log("Unable to obtain picture: " + error, "app");
 
     }, options);
 }
 
 function createNewFileEntry(imgUri) {
-    window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function success(dirEntry) {
+	window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function success(dirEntry) {
         // JPEG file
         var timestamp=new Date().getTime();
         dirEntry.getFile($$("#dev-id").val()+"-"+timestamp+".jpg", { create: true, exclusive: false }, function (fileEntry) {
@@ -57,12 +57,12 @@ function createNewFileEntry(imgUri) {
             saveFile(fileEntry, imgUri);
             // displayFileData(fileEntry.fullPath, "File copied to");
             var img = $$("<img></img>").attr({'src': imgUri, width: '100%'});
-		    var div_con = $$("<div></div>").attr('class','card-content').append(img);
-		    var op = $$("<a></a>").attr('href','javascript:delImg('+timestamp+')').attr('class','link').append("删除");
-		    var div_foot = $$("<div></div>").attr('class','card-footer').append(op);
-		    var div_card = $$("<div></div>").attr({'class':'card demo-card-header-pic','width': '200'}).append(div_con).append(div_foot);
-		    var div_item = $$("<div></div>").attr("id",timestamp).attr('class','rec_pic').append(div_card);
-		    $$("#images").append(div_item);
+            var div_con = $$("<div></div>").attr('class','card-content').append(img);
+            var op = $$("<a></a>").attr('href','javascript:delImg('+timestamp+')').attr('class','link').append("删除");
+            var div_foot = $$("<div></div>").attr('class','card-footer').append(op);
+            var div_card = $$("<div></div>").attr({'class':'card demo-card-header-pic','width': '200'}).append(div_con).append(div_foot);
+            var div_item = $$("<div></div>").attr("id",timestamp).attr('class','rec_pic').append(div_card);
+            $$("#images").append(div_item);
         }, function(){alert("Create File Fail");});
 
     }, function(){alert("Resovel url Fail");});
@@ -81,8 +81,20 @@ function delImg(id){
 	});
 }
 
+function delImgUrl(url){
+	window.resolveLocalFileSystemURL(url, function (fileEntry) {  
+		fileEntry.remove(function () {  
+			console.log('delete success');  
+		}, function (err) {  
+			console.error(err);  
+		}, function () {  
+			console.log('file not exist');  
+		});  
+	});
+}
+
 function setOptions(srcType) {
-    var options = {
+	var options = {
         // Some common settings are 20, 50, and 100
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
@@ -98,34 +110,34 @@ function setOptions(srcType) {
 function saveFile(fileEntry, imgUri) {
     // Create a FileWriter object for our FileEntry (log.txt).
     window.resolveLocalFileSystemURL(imgUri, function (fe) { 
-	    fe.file(function (file) {
-	        var reader = new FileReader();
-	        reader.onloadend = function() {
-	        	console.log("load success");
-	            var blob = new Blob([new Uint8Array(this.result)], { type: "image/jpg" });
-	            writeFile(fileEntry, blob);
-	        };
-	        reader.readAsArrayBuffer(file);
-	    }, function(){console.log("load fail!")});
-	});
+    	fe.file(function (file) {
+    		var reader = new FileReader();
+    		reader.onloadend = function() {
+    			console.log("load success");
+    			var blob = new Blob([new Uint8Array(this.result)], { type: "image/jpg" });
+    			writeFile(fileEntry, blob);
+    		};
+    		reader.readAsArrayBuffer(file);
+    	}, function(){console.log("load fail!")});
+    });
 }
 
 function writeFile(fileEntry, dataObj) {
     // Create a FileWriter object for our FileEntry (log.txt).
     fileEntry.createWriter(function (fileWriter) {
-        fileWriter.onwriteend = function() {
-            console.log("Successful file write...");
-            if (dataObj.type == "image/png") {
-                readBinaryFile(fileEntry);
-            }
-            else {
-                readFile(fileEntry);
-            }
-        };
-        fileWriter.onerror = function(e) {
-            console.log("Failed file write: " + e.toString());
-        };
-        fileWriter.write(dataObj);
+    	fileWriter.onwriteend = function() {
+    		console.log("Successful file write...");
+    		if (dataObj.type == "image/png") {
+    			readBinaryFile(fileEntry);
+    		}
+    		else {
+    			readFile(fileEntry);
+    		}
+    	};
+    	fileWriter.onerror = function(e) {
+    		console.log("Failed file write: " + e.toString());
+    	};
+    	fileWriter.write(dataObj);
     });
 }
 
@@ -147,8 +159,12 @@ function saveRecord(){
 	record.picStr = picStr;
 	record.upload = 0;
 	records.push(record);
-	while(records.length > max_records_lenght)
-		records.shift();
+	while(records.length > max_records_lenght){
+		var rt = records.shift();
+		$$.each(rt.pics,function(index,value){
+			delImgUrl(value);
+		});
+	}
 	storeRecord();
 
 	if(upload_enable == 1){
@@ -209,19 +225,19 @@ function uploadPic(pic){
 	var us = -1;
 	window.resolveLocalFileSystemURL(pic, function (fileEntry) {  
 		var fileURL = fileEntry.toURL();
-	    var success = function (r) {
-	        us = 1;
-	    }
-	    var fail = function (error) {
-	        us = 0;
-	    }
-	    var options = new FileUploadOptions();
-	    options.fileKey = "file";
-	    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
-	    options.mimeType = "text/plain";
+		var success = function (r) {
+			us = 1;
+		}
+		var fail = function (error) {
+			us = 0;
+		}
+		var options = new FileUploadOptions();
+		options.fileKey = "file";
+		options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+		options.mimeType = "text/plain";
 
-	    var ft = new FileTransfer();
-	    ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
+		var ft = new FileTransfer();
+		ft.upload(fileURL, encodeURI(baseUrl+"uploadRecPic"), success, fail, options);
 	});
 }
 
@@ -249,3 +265,27 @@ function uploadAll(){
 	else
 		myApp.alert("已完成所有信息的上传","通知");
 }
+
+function delRec(recid,accid){
+	$$.ajax({
+		async : true,
+		cache : false,
+		type : 'GET',
+		crossDomain : true,
+		url : baseUrl + 'delRecord',
+		data :  { rid: recid , aid : accid},
+		dataType : "json",
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		error : function(e,status) {
+		},
+		success : function(data) {
+			if(data == 0){
+				myApp.alert("您无权删除这条记录","抱歉");
+			}
+			else if(data == 1){
+				myApp.alert("删除成功，重新加载后更新","通知");
+			}
+		}
+	});
+}
+

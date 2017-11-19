@@ -55,12 +55,20 @@ $$(document).on('pageInit', function (e) {
         showRecords();
     }
 
+    if (page.name === 'favorite') {
+        showFavorite();
+    }
+
     if (page.name === 'picture') {
         showPic(page.query.pic);
     }
 
     if (page.name === 'me') {
         loadAccountInfo();
+    }
+
+    if (page.name === 'suplist') {
+        loadAllDevs(account.id);
     }
 
     if (page.name === 'mesage') {
@@ -76,7 +84,7 @@ $$(document).on('pageInit', function (e) {
         var myMessagebar = myApp.messagebar('.messagebar');
     }
  
-})
+});
 
 $$('.log-in').click(function(){
     login();
