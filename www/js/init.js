@@ -1,6 +1,6 @@
 // Initialize app
 var myApp = new Framework7();
-var severUrl = "http://192.168.1.125:8080/";
+var severUrl = "http://10.170.234.255:8080/";
 var baseUrl = severUrl+"tpri/app/";
 var account;
 var authority;
@@ -13,6 +13,7 @@ var records;
 var favorite;
 var max_records_lenght = 50;
 var info_size = 8;
+var blog_size = 8;
 
 //1：管道
 //2：支吊架

@@ -26,6 +26,7 @@ $$(document).on('pageInit', function (e) {
                 $$('.fun_title').html("支吊架掌中宝（轻量版）");
             }
         }
+        loadLastBlog();
     }
 
     if (page.name === 'tpcheck') {
@@ -71,17 +72,8 @@ $$(document).on('pageInit', function (e) {
         loadAllDevs(account.id);
     }
 
-    if (page.name === 'mesage') {
-        // 会话flag
-        var conversationStarted = false;
-         
-        // Init Messages
-        var myMessages = myApp.messages('.messages', {
-          autoLayout:true
-        });
-        
-        // Init Messagebar
-        var myMessagebar = myApp.messagebar('.messagebar');
+    if (page.name === 'message') {
+        loadAllBlog();
     }
  
 });
