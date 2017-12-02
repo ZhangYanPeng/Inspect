@@ -1,7 +1,7 @@
 function startCheck(type){
-    check_type = type;
-    mainView.router.loadPage('plan.html');
-    loadDevice();
+	check_type = type;
+	mainView.router.loadPage('plan.html');
+	loadDevice();
 }
 
 function loadDevice() {
@@ -49,8 +49,6 @@ function presentPlan(){
 
 		var unc_ul_item = $$("<ul></ul>");
 		var c_ul_item = $$("<ul></ul>");
-
-		console.log(value);
 		$$.each(value.devices,function(ind,val){
 			if( progress[index][ind] == 0 ){
 				var unc_li_item = $$("<li></li>").append(val.name);
@@ -84,10 +82,11 @@ function presentPlan(){
 
 function scanStart () {
 	cordova.plugins.barcodeScanner.scan(function (result) {
-        var device = JSON.parse(result.text);
-        completeCheck(device.id);
-        presentPlan();
-		mainView.router.loadPage("information.html?id="+device.id);
+		var il = result.text.split(';');
+		var sid = il[0].split(':')[1];
+		completeCheck(sid);
+		presentPlan();
+		mainView.router.loadPage("information.html?id="+sid+"&content="+result.text);
 	}, 
 	function (error) {
 	},
@@ -104,24 +103,58 @@ function scanStart () {
         disableAnimations : true, // iOS
         disableSuccessBeep: false // iOS and Android
     });
-};
+}
 
-function loadDeviceInfo(did){
+function loadDeviceInfo(did,content){
 	$$.ajax({
 		async : true,
 		cache : false,
 		type : 'GET',
 		crossDomain : true,
 		url : baseUrl + 'loadDeviceInfo',
-		data :  { id: did},
+		data :  { aid : account.id ,id: did},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
-			loadLocalDeviceInfo(did);
+			loadLocalDeviceInfo(did,content);
+			$$("#devPic").html("");
 		},
 		success : function(data) {
 			$$('#deviceinfo').html("");
-			presentDevInfo(data,did);
+			presentDevInfo(data,did,info_size);
+			$$("#devPic").html("");
+			if( data.supOrSub==1){
+				$$("#supDevInfo").show();
+				loadSupDeviceInfo(data.supDevId);
+			}else{
+				$$("#supDevInfo").hide();
+			}
+			$$.ajax({
+				async : true,
+				cache : false,
+				type : 'GET',
+				crossDomain : true,
+				url : baseUrl + 'loadDevicePic',
+				data :  { id: did},
+				dataType : "json",
+				contentType : "application/x-www-form-urlencoded; charset=utf-8",
+				error : function(e,status) {
+				},
+				success : function(data) {
+					if( data == null){
+						myApp.alert("您无权查看该设备","抱歉");
+						mainView.router.loadPage("function.html");
+					}
+
+					$$("#devPic").html("");
+					$$.each(data,function(index,value){
+						var img = $$("<img></img>").attr('src',severUrl+value.src).attr('width','100em');
+						var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
+						var li_img = $$("<li></li>").append(a_img).append(value.name);
+						$$("#devPic").append(li_img);
+					});
+				}
+			});
 		}
 	});
 }
@@ -133,29 +166,60 @@ function loadLocalDeviceInfo(did){
 		$$.each(value.devices,function(ind,val){
 			if(val.id == did){
 				c_dev = val;
-				return false
+				return false;
 			}
 		});
 		if(c_dev != null)
 			return false;
 	});
 	if( c_dev == null){
-		$$('#deviceinfo').html("");
-		presentDevInfo({},did);
+		$$("#loadAllInfo").hide();
+		$$('.checkrecord').attr('href','#');
+		var il = content.split(';');
+		for( var i = 1; i<il.length-1; i++ ){
+			var ti = il[i];
+			var pn = ti.split(':')[0];
+			var pv = ti.split(':')[1];
+			var title = $$("<div></div>").attr('class','item-title').append(pn);
+			var content = $$("<div></div>").attr('class','item-after').append(pv);
+			var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+			var li = $$("<li></li>").attr('class','item-content').append(item);
+			$$('#deviceinfo').append(li);
+		}
+		$$(".reclist").html("");
 	}
 	else{
 		$$('#deviceinfo').html("");
-		presentDevInfo(c_dev,did);
+		presentDevInfo(c_dev,did,info_size);
 	}
 }
 
-function presentDevInfo(device,did){
+function presentDevInfo(device,did,len){
+	$$("#loadAllInfo").show();
 	$$('.checkrecord').attr('href','record.html?id='+did);
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备编号");
+		var content = $$("<div></div>").attr('class','item-after').append(device.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#deviceinfo').append(li);
+	}
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备类型");
+		var content = $$("<div></div>").attr('class','item-after').append(device.deviceType.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#deviceinfo').append(li);
+	}
+	var i=0;
 	$$.each(device.deviceInfos,function(index,value){
 		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
 		var content = $$("<div></div>").attr('class','item-after').append(value.value);
 		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
 		var li = $$("<li></li>").attr('class','item-content').append(item);
+		if( i >= info_size)
+			li.hide();
+		i = i + 1;
 		$$('#deviceinfo').append(li);
 	});
 
@@ -170,10 +234,22 @@ function presentDevInfo(device,did){
 		var pic = $$("<p></p>");
 		$$.each(value.pictures,function(ind,val){
 			var img = $$("<img></img>").attr('src',severUrl+val).attr('width','50em');
-			var a_img = $$("<a></a>").attr('href',"picture.html?pic="+severUrl+val).append(img);
+			var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
 			pic.append(a_img);
 		});
-		var div_blo = $$("<div></div>").attr('class','content-block').append(pc).append(pr).append(pic);
+
+		var a_fav = $$("<a></a>").attr('href',"javascript:addFavRec("+value.id+");").append("加入收藏");
+		var div_title = $$("<div></div>").attr('class','item-title');
+		if(isFav(value.id)==0){
+			div_title.append(a_fav);
+		}else{
+			div_title.append("已收藏");
+		}
+		var a_del = $$("<a></a>").attr('href',"javascript:delRec("+value.id+","+account.id+");").append("删除");
+		var div_after = $$("<div></div>").attr('class','item-after').append(a_del);
+		var div_inner = $$("<div></div>").attr('class','item-inner').append(div_title).append(div_after);
+
+		var div_blo = $$("<div></div>").attr('class','content-block').append(pc).append(pr).append(pic).append(div_inner);
 		var div_con = $$("<div></div>").attr('class','accordion-item-content').append(div_blo);
 		var li = $$("<li></li>").attr('class','accordion-item').append(a).append(div_con);
 		ul.append(li);
@@ -182,6 +258,7 @@ function presentDevInfo(device,did){
 }
 
 function completeCheck(did){
+	console.log(did);
 	$$.each(devices,function(index,value){
 		$$.each(value.devices,function(ind,val){
 			if(val.id == did){
@@ -189,10 +266,101 @@ function completeCheck(did){
 					progress[index][ind]=1;
 				} catch(err) {
 					alert("err");
-					return false
+					return false;
 				} 
-				return false
+				return false;
 			}
 		});
+	});
+}
+
+function loadAllInfo(){
+	$$("#loadAllInfo").hide();
+	$$('#deviceinfo').children().show();
+}
+
+
+function loadSupDeviceInfo(did){
+	$$.ajax({
+		async : true,
+		cache : false,
+		type : 'GET',
+		crossDomain : true,
+		url : baseUrl + 'loadDeviceInfo',
+		data :  { id: did},
+		dataType : "json",
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		error : function(e,status) {
+			loadLocalSupDeviceInfo(did);
+			$$("#devPic").html("");
+		},
+		success : function(data) {
+			presentSupDevInfo(data,did);
+			$$.ajax({
+				async : true,
+				cache : false,
+				type : 'GET',
+				crossDomain : true,
+				url : baseUrl + 'loadDevicePic',
+				data :  { id: did},
+				dataType : "json",
+				contentType : "application/x-www-form-urlencoded; charset=utf-8",
+				error : function(e,status) {
+				},
+				success : function(data) {
+					$$("#supDevPic").html("");
+					$$.each(data,function(index,value){
+						var img = $$("<img></img>").attr('src',severUrl+value.src).attr('width','100em');
+						var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
+						var li_img = $$("<li></li>").append(a_img).append(value.name);
+						$$("#supDevPic").append(li_img);
+					});
+				}
+			});
+		}
+	});
+}
+
+function loadLocalSupDeviceInfo(did){
+	var c_dev = null;
+	$$.each(devices,function(index,value){
+		var tmp = new Array();
+		$$.each(value.devices,function(ind,val){
+			if(val.id == did){
+				c_dev = val;
+				return false;
+			}
+		});
+		if(c_dev != null)
+			return false;
+	});
+	if( c_dev != null){
+		$$('#deviceinfo').html("");
+		presentSupDevInfo(c_dev,did);
+	}
+}
+
+function presentSupDevInfo(device,did){
+	$$('#supInfoList').html("");
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备名称");
+		var content = $$("<div></div>").attr('class','item-after').append(device.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#supInfoList').append(li);
+	}
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备类型");
+		var content = $$("<div></div>").attr('class','item-after').append(device.deviceType.baseType.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#supInfoList').append(li);
+	}
+	$$.each(device.deviceInfos,function(index,value){
+		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
+		var content = $$("<div></div>").attr('class','item-after').append(value.value);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#supInfoList').append(li);
 	});
 }

@@ -112,7 +112,7 @@ function loadDeviceInfo(did,content){
 		type : 'GET',
 		crossDomain : true,
 		url : baseUrl + 'loadDeviceInfo',
-		data :  { id: did},
+		data :  { aid : account.id ,id: did},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
@@ -141,10 +141,15 @@ function loadDeviceInfo(did,content){
 				error : function(e,status) {
 				},
 				success : function(data) {
+					if( data == null){
+						myApp.alert("您无权查看该设备","抱歉");
+						mainView.router.loadPage("function.html");
+					}
+
 					$$("#devPic").html("");
 					$$.each(data,function(index,value){
 						var img = $$("<img></img>").attr('src',severUrl+value.src).attr('width','100em');
-						var a_img = $$("<a></a>").attr('href',"picture.html?pic="+severUrl+value.src).append(img);
+						var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
 						var li_img = $$("<li></li>").append(a_img).append(value.name);
 						$$("#devPic").append(li_img);
 					});
@@ -192,6 +197,20 @@ function loadLocalDeviceInfo(did){
 function presentDevInfo(device,did,len){
 	$$("#loadAllInfo").show();
 	$$('.checkrecord').attr('href','record.html?id='+did);
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备编号");
+		var content = $$("<div></div>").attr('class','item-after').append(device.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#deviceinfo').append(li);
+	}
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备类型");
+		var content = $$("<div></div>").attr('class','item-after').append(device.deviceType.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#deviceinfo').append(li);
+	}
 	var i=0;
 	$$.each(device.deviceInfos,function(index,value){
 		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
@@ -215,7 +234,7 @@ function presentDevInfo(device,did,len){
 		var pic = $$("<p></p>");
 		$$.each(value.pictures,function(ind,val){
 			var img = $$("<img></img>").attr('src',severUrl+val).attr('width','50em');
-			var a_img = $$("<a></a>").attr('href',"picture.html?pic="+severUrl+val).append(img);
+			var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
 			pic.append(a_img);
 		});
 
@@ -239,6 +258,7 @@ function presentDevInfo(device,did,len){
 }
 
 function completeCheck(did){
+	console.log(did);
 	$$.each(devices,function(index,value){
 		$$.each(value.devices,function(ind,val){
 			if(val.id == did){
@@ -290,9 +310,8 @@ function loadSupDeviceInfo(did){
 				success : function(data) {
 					$$("#supDevPic").html("");
 					$$.each(data,function(index,value){
-						console.log(value.src);
 						var img = $$("<img></img>").attr('src',severUrl+value.src).attr('width','100em');
-						var a_img = $$("<a></a>").attr('href',"picture.html?pic="+severUrl+value.src).append(img);
+						var a_img = $$("<a></a>").attr('href',"javascript:showPic('"+severUrl+value.src+"');").append(img);
 						var li_img = $$("<li></li>").append(a_img).append(value.name);
 						$$("#supDevPic").append(li_img);
 					});
@@ -323,6 +342,20 @@ function loadLocalSupDeviceInfo(did){
 
 function presentSupDevInfo(device,did){
 	$$('#supInfoList').html("");
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备名称");
+		var content = $$("<div></div>").attr('class','item-after').append(device.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#supInfoList').append(li);
+	}
+	{
+		var title = $$("<div></div>").attr('class','item-title').append("设备类型");
+		var content = $$("<div></div>").attr('class','item-after').append(device.deviceType.baseType.name);
+		var item = $$("<div></div>").attr('class','item-inner').append(title).append(content);
+		var li = $$("<li></li>").attr('class','item-content').append(item);
+		$$('#supInfoList').append(li);
+	}
 	$$.each(device.deviceInfos,function(index,value){
 		var title = $$("<div></div>").attr('class','item-title').append(value.deviceParam.name);
 		var content = $$("<div></div>").attr('class','item-after').append(value.value);

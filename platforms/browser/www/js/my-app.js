@@ -26,13 +26,14 @@ $$(document).on('pageInit', function (e) {
                 $$('.fun_title').html("支吊架掌中宝（轻量版）");
             }
         }
+        loadLastBlog();
     }
 
     if (page.name === 'tpcheck') {
     }
 
     if (page.name === 'information') {
-		loadDeviceInfo(page.query.id);
+		loadDeviceInfo(page.query.id,page.query.content);
     }
 
     if (page.name === 'device') {
@@ -55,6 +56,10 @@ $$(document).on('pageInit', function (e) {
         showRecords();
     }
 
+    if (page.name === 'favorite') {
+        showFavorite();
+    }
+
     if (page.name === 'picture') {
         showPic(page.query.pic);
     }
@@ -63,20 +68,15 @@ $$(document).on('pageInit', function (e) {
         loadAccountInfo();
     }
 
-    if (page.name === 'mesage') {
-        // 会话flag
-        var conversationStarted = false;
-         
-        // Init Messages
-        var myMessages = myApp.messages('.messages', {
-          autoLayout:true
-        });
-        
-        // Init Messagebar
-        var myMessagebar = myApp.messagebar('.messagebar');
+    if (page.name === 'suplist') {
+        loadAllDevs(account.id);
+    }
+
+    if (page.name === 'message') {
+        loadAllBlog();
     }
  
-})
+});
 
 $$('.log-in').click(function(){
     login();

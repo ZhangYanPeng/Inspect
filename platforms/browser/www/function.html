@@ -1,7 +1,6 @@
 <!-- We don't need a full layout in this file because this page will be parsed with Ajax. -->
 
 
-
 <div data-page="function" class="page navbar-fixed toolbar-fixed">
     <!-- Top Navbar-->
     <div class="navbar">
@@ -17,12 +16,26 @@
     <div class="page-content">
         <div class="content-block" >
             <div class="row no-gutter" >
-            <div class="col-50"><a href="tpcheck.html" class="link"><i class="fa fa-tint fa-4x color-red"></i><br>支吊架</a></div>
-                <div class="col-50"><a href="#" ><i class="fa fa-times-circle fa-4x color-orange"></i><br>阀门</a></div>
+                <div class="col-33"><a href="tpcheck.html" class="link"><i class="fa fa-tint fa-4x color-red"></i><br><font size="2">支吊架</font></a></div>
+                <div class="col-33"><a href="#" ><i class="fa fa-times-circle fa-4x color-orange"></i><br><font size="2">阀门</font></a></div><div class="col-33"><a href="#" ><i class="fa fa-chain-broken fa-4x color-green"></i><br><font size="2">焊口</font></a></div>
             </div>
             <div class="row no-gutter">
-                <div class="col-50"><a href="#" ><i class="fa fa-chain-broken fa-4x color-green"></i><br>焊口</a></div>
-                <div class="col-50"><a href="reclist.html" ><i class="fa fa-gears fa-4x color-blue"></i><br>检查记录</a></div>
+                <div class="col-33"><a href="reclist.html" ><i class="fa fa-gears fa-4x color-blue"></i><br><font size="2">检查记录</font></a></div>
+                <div class="col-33"><a href="suplist.html" ><i class="fa fa-info fa-4x color-pink"></i><br><font size="2">信息管理</font></a></div>
+                <div class="col-33"><a href="favorite.html" ><i class="fa fa-star fa-4x color-yellow"></i><br><font size="2">我的收藏</font></a></div>
+            </div>
+        </div>
+        <div id="lastblog" class="card demo-card-header-pic">
+            <div id="blog-title" style="" valign="bottom" class="card-header color-white no-border">
+            </div>
+            <div class="card-content">
+                <div class="card-content-inner">
+                    <p id="blog-date" class="color-gray"></p>
+                    <p id="blog-content"></p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="link">阅读全文</a>
             </div>
         </div>
     </div>

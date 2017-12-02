@@ -1,6 +1,6 @@
 // Initialize app
 var myApp = new Framework7();
-var severUrl = "http://192.168.23.1:8080/";
+var severUrl = "http://10.170.234.255:8080/";
 var baseUrl = severUrl+"tpri/app/";
 var account;
 var authority;
@@ -10,7 +10,10 @@ var plan_enable = 0;
 var plan_content = "";
 
 var records;
+var favorite;
 var max_records_lenght = 50;
+var info_size = 8;
+var blog_size = 8;
 
 //1：管道
 //2：支吊架
@@ -63,11 +66,19 @@ function getSetting(){
 	else{
 		storeSetting();
 	}
-	rec = storage["records"];
+
+	var rec = storage["records"];
 	if(rec == null || rec == ""){
 		records = new Array();
 	}else{
-		records = JSON.parse(rec)
+		records = JSON.parse(rec);
+	}
+
+	var fav = storage["favorite"];
+	if(fav == null || fav == ""){
+		favorite = new Array();
+	}else{
+		favorite = JSON.parse(fav);
 	}
 }
 
@@ -79,6 +90,7 @@ function storeSetting(){
 function storeRecord(){
 	var storage = window.localStorage;
 	storage["records"] = JSON.stringify(records);
+	storage["favorite"] = JSON.stringify(favorite);
 }
 
 function getNowFormatDate() {
@@ -98,3 +110,12 @@ function getNowFormatDate() {
             + seperator2 + date.getSeconds();
     return currentdate;
 } 
+
+function showPic(val){
+	console.log("showPic");
+	var myPhotoBrowser = myApp.photoBrowser({
+    zoom: true,
+    photos: [val]
+	});   
+	myPhotoBrowser.open(); // open photo browser
+}

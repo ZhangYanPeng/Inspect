@@ -170,7 +170,7 @@ function saveRecord(){
 	if(upload_enable == 1){
 		uploadAllRecords();
 		if(check_type != "")
-			startCheck(check_type);
+			mainView.router.loadPage('plan.html');
 		else
 			mainView.router.loadPage('function.html');
 	}
