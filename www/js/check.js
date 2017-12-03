@@ -23,6 +23,7 @@ function loadDevice() {
 		data :  { devices : JSON.stringify(pc), type : check_type},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		timeout: 1000,
 		error : function(e,status) {
 			myApp.alert("加载失败，请重试","抱歉");
 		},
@@ -115,6 +116,7 @@ function loadDeviceInfo(did,content){
 		data :  { aid : account.id ,id: did},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		timeout: 1000,
 		error : function(e,status) {
 			loadLocalDeviceInfo(did,content);
 			$$("#devPic").html("");
@@ -258,7 +260,6 @@ function presentDevInfo(device,did,len){
 }
 
 function completeCheck(did){
-	console.log(did);
 	$$.each(devices,function(index,value){
 		$$.each(value.devices,function(ind,val){
 			if(val.id == did){
@@ -290,6 +291,7 @@ function loadSupDeviceInfo(did){
 		data :  { id: did},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		timeout: 1000,
 		error : function(e,status) {
 			loadLocalSupDeviceInfo(did);
 			$$("#devPic").html("");

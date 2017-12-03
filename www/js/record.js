@@ -7,6 +7,7 @@ function initRecord(did){
 		url : baseUrl + 'loadCheckItem',
 		data :  { id: did},
 		dataType : "json",
+		timeout: 1000,
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
 		error : function(e,status) {
 			alert("err");

@@ -45,7 +45,9 @@ function addFavRec(recid){
 		data :  { rid: recid},
 		dataType : "json",
 		contentType : "application/x-www-form-urlencoded; charset=utf-8",
-		error : function(e,status) {
+		timeout: 1000,
+		error : function(e,status) {\
+			myApp.alert("加载超时","抱歉");
 		},
 		success : function(data) {
 			console.log(data.pictures.length);
